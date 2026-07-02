@@ -1,0 +1,3 @@
+- [OpenAPI field names must match generated types](openapi-field-names.md) — always verify generated type field names before using in frontend; schema is the ground truth.
+- [Route ordering in Express](express-route-ordering.md) — static routes like /stats, /featured must be registered before /:id wildcards or they get captured as ID lookups.
+- [req.params needs String() cast](express-params-cast.md) — TypeScript Express req.params["key"] returns string|string[], always wrap with String() before passing to Drizzle eq().

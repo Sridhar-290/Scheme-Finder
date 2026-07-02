@@ -1,0 +1,777 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: AI Public Benefits Navigator API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: schemes
+    description: Government schemes
+  - name: profile
+    description: User profile
+  - name: saved
+    description: Saved schemes
+  - name: eligibility
+    description: Eligibility checking
+  - name: ai
+    description: AI assistant
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /v1/auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Bad request
+
+  /v1/auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Unauthorized
+
+  /v1/auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /v1/auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+
+  /v1/schemes:
+    get:
+      operationId: listSchemes
+      tags: [schemes]
+      summary: List schemes with filters
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: state
+          in: query
+          schema:
+            type: string
+        - name: schemeType
+          in: query
+          schema:
+            type: string
+            enum: [central, state, all]
+        - name: gender
+          in: query
+          schema:
+            type: string
+        - name: minAge
+          in: query
+          schema:
+            type: integer
+        - name: maxAge
+          in: query
+          schema:
+            type: integer
+        - name: maxIncome
+          in: query
+          schema:
+            type: integer
+        - name: occupation
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of schemes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemesListResponse"
+
+  /v1/schemes/stats:
+    get:
+      operationId: getSchemeStats
+      tags: [schemes]
+      summary: Get scheme statistics
+      responses:
+        "200":
+          description: Scheme stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemeStats"
+
+  /v1/schemes/featured:
+    get:
+      operationId: getFeaturedSchemes
+      tags: [schemes]
+      summary: Get featured schemes
+      responses:
+        "200":
+          description: Featured schemes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scheme"
+
+  /v1/schemes/categories:
+    get:
+      operationId: getSchemeCategories
+      tags: [schemes]
+      summary: Get scheme categories with counts
+      responses:
+        "200":
+          description: Categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryCount"
+
+  /v1/schemes/{id}:
+    get:
+      operationId: getScheme
+      tags: [schemes]
+      summary: Get scheme by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Scheme
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Scheme"
+        "404":
+          description: Not found
+
+  /v1/profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get user profile
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+
+    put:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileInput"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /v1/saved:
+    get:
+      operationId: getSavedSchemes
+      tags: [saved]
+      summary: Get saved schemes
+      responses:
+        "200":
+          description: Saved schemes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SavedScheme"
+
+  /v1/saved/{schemeId}:
+    post:
+      operationId: saveScheme
+      tags: [saved]
+      summary: Save a scheme
+      parameters:
+        - name: schemeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveSchemeInput"
+      responses:
+        "201":
+          description: Saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedScheme"
+
+    delete:
+      operationId: unsaveScheme
+      tags: [saved]
+      summary: Unsave a scheme
+      parameters:
+        - name: schemeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /v1/eligibility/check:
+    post:
+      operationId: checkEligibility
+      tags: [eligibility]
+      summary: Check eligibility for schemes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EligibilityInput"
+      responses:
+        "200":
+          description: Eligibility results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EligibilityResponse"
+
+  /v1/ai/conversations:
+    get:
+      operationId: getConversations
+      tags: [ai]
+      summary: Get AI conversations
+      responses:
+        "200":
+          description: Conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Conversation"
+
+    post:
+      operationId: createConversation
+      tags: [ai]
+      summary: Create a new conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+
+  /v1/ai/conversations/{id}:
+    get:
+      operationId: getConversation
+      tags: [ai]
+      summary: Get conversation with messages
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Conversation with messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationWithMessages"
+
+    delete:
+      operationId: deleteConversation
+      tags: [ai]
+      summary: Delete a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /v1/ai/conversations/{id}/messages:
+    post:
+      operationId: sendMessage
+      tags: [ai]
+      summary: Send a message in a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessageInput"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatMessageResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    RegisterInput:
+      type: object
+      required: [email, password, name]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    User:
+      type: object
+      required: [id, email, name, createdAt]
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [user, token]
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+
+    UserProfile:
+      type: object
+      required: [id, name, state, age, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        state:
+          type: string
+        age:
+          type: integer
+        income:
+          type: ["integer", "null"]
+        occupation:
+          type: ["string", "null"]
+        gender:
+          type: ["string", "null"]
+        category:
+          type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+
+    UserProfileInput:
+      type: object
+      properties:
+        name:
+          type: string
+        state:
+          type: string
+        age:
+          type: integer
+        income:
+          type: ["integer", "null"]
+        occupation:
+          type: ["string", "null"]
+        gender:
+          type: ["string", "null"]
+        category:
+          type: ["string", "null"]
+
+    Scheme:
+      type: object
+      required: [id, title, category, description, benefits, eligibility, documents, applicationProcess, officialWebsite, schemeType, lastUpdated]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        benefits:
+          type: string
+        eligibility:
+          type: array
+          items:
+            type: string
+        documents:
+          type: array
+          items:
+            type: string
+        applicationProcess:
+          type: array
+          items:
+            type: string
+        officialWebsite:
+          type: string
+        schemeType:
+          type: string
+          enum: [central, state]
+        state:
+          type: ["string", "null"]
+        minAge:
+          type: ["integer", "null"]
+        maxAge:
+          type: ["integer", "null"]
+        maxIncome:
+          type: ["integer", "null"]
+        gender:
+          type: ["string", "null"]
+        occupation:
+          type: ["string", "null"]
+        isFeatured:
+          type: boolean
+        image:
+          type: string
+          description: URL of a representative image for the scheme
+        faqs:
+          type: array
+          items:
+            $ref: "#/components/schemas/FAQ"
+        lastUpdated:
+          type: string
+
+    FAQ:
+      type: object
+      required: [question, answer]
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+
+    SchemesListResponse:
+      type: object
+      required: [schemes, total, page, limit]
+      properties:
+        schemes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Scheme"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    SchemeStats:
+      type: object
+      required: [totalSchemes, categoryCounts, centralSchemes, stateSchemes, totalBeneficiaries]
+      properties:
+        totalSchemes:
+          type: integer
+        categoryCounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryCount"
+        centralSchemes:
+          type: integer
+        stateSchemes:
+          type: integer
+        totalBeneficiaries:
+          type: string
+
+    CategoryCount:
+      type: object
+      required: [category, count]
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+
+    SavedScheme:
+      type: object
+      required: [id, schemeId, scheme, savedAt]
+      properties:
+        id:
+          type: integer
+        schemeId:
+          type: string
+        scheme:
+          $ref: "#/components/schemas/Scheme"
+        notes:
+          type: ["string", "null"]
+        savedAt:
+          type: string
+
+    SaveSchemeInput:
+      type: object
+      properties:
+        notes:
+          type: ["string", "null"]
+
+    EligibilityInput:
+      type: object
+      required: [age, state, income, gender, occupation, category]
+      properties:
+        age:
+          type: integer
+        state:
+          type: string
+        income:
+          type: integer
+        gender:
+          type: string
+        occupation:
+          type: string
+        category:
+          type: string
+
+    SchemeResult:
+      type: object
+      required: [scheme, reason, matchScore, requiredDocuments]
+      properties:
+        scheme:
+          $ref: "#/components/schemas/Scheme"
+        reason:
+          type: string
+        matchScore:
+          type: integer
+        requiredDocuments:
+          type: array
+          items:
+            type: string
+        missingCriteria:
+          type: ["string", "null"]
+
+    EligibilityResponse:
+      type: object
+      required: [eligible, partiallyEligible, totalEstimatedBenefit]
+      properties:
+        eligible:
+          type: array
+          items:
+            $ref: "#/components/schemas/SchemeResult"
+        partiallyEligible:
+          type: array
+          items:
+            $ref: "#/components/schemas/SchemeResult"
+        totalEstimatedBenefit:
+          type: string
+
+    Conversation:
+      type: object
+      required: [id, title, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ConversationInput:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+
+    Message:
+      type: object
+      required: [id, role, content, createdAt]
+      properties:
+        id:
+          type: integer
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        createdAt:
+          type: string
+
+    ConversationWithMessages:
+      type: object
+      required: [id, title, messages, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ChatMessageInput:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+
+    ChatMessageResponse:
+      type: object
+      required: [userMessage, assistantMessage]
+      properties:
+        userMessage:
+          $ref: "#/components/schemas/Message"
+        assistantMessage:
+          $ref: "#/components/schemas/Message"

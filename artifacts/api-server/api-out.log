@@ -1,0 +1,22 @@
+[01:10:05.825] [32mINFO[39m (12388): [36mServer listening[39m
+    [35mport[39m: 8080
+[01:10:14.029] [32mINFO[39m (12388): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/v1/schemes/categories"
+    }
+    [35mres[39m: {
+      "statusCode": 304
+    }
+    [35mresponseTime[39m: 19
+[01:10:14.040] [32mINFO[39m (12388): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/v1/schemes"
+    }
+    [35mres[39m: {
+      "statusCode": 304
+    }
+    [35mresponseTime[39m: 3
