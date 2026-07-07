@@ -4,15 +4,36 @@ A full-stack web app helping Indian citizens discover and apply for government w
 
 ## What this project does
 
-- Browse 44+ real government welfare schemes (static data)
+- Browse 150+ real government welfare schemes (static data)
 - Run an eligibility wizard (“Find Benefits”) to personalize guidance
 - Use an AI assistant to answer scheme/eligibility questions
 - Register/Login with JWT authentication
 - Save schemes and maintain conversation history
+How to run
 
-## Run & Operate
+> Live demo link: **(not available in repo)** — run locally below.
+
+## How to run (local)
+
+### 1) Start the services
+
+
+Open two terminals:
+
+- **API server** (port **8080**, base path `/api`):
+  - `pnpm --filter @workspace/api-server run dev`
+
+- **Frontend** (port **22968**, base path `/`):
+  - `pnpm --filter @workspace/navigator run dev`
+
+### 2) Open the app
+
+- Frontend: http://localhost:22968/
+- API (health check): http://localhost:8080/api/health
+
 
 ### Start the services
+
 
 - API server:
   - `pnpm --filter @workspace/api-server run dev`
@@ -23,6 +44,26 @@ A full-stack web app helping Indian citizens discover and apply for government w
   - `pnpm --filter @workspace/navigator run dev`
   - Port: **22968**
   - Base path: **`/`**
+
+### Common commands
+
+- Typecheck (all packages):
+  - `pnpm run typecheck`
+
+- Build (typecheck + build all packages):
+  - `pnpm run build`
+
+- Regenerate API client & Zod schemas from OpenAPI:
+  - `pnpm --filter @workspace/api-spec run codegen`
+
+- Push DB schema changes (dev only):
+  - `pnpm --filter @workspace/db run push`
+
+### Required environment variables
+
+- `DATABASE_URL` — Postgres connection string
+- `SESSION_SECRET` — JWT signing secret
+<img width="1774" height="887" alt="ChatGPT Image Jul 6, 2026, 10_25_50 PM" src="https://github.com/user-attachments/assets/9464781f-2515-40d3-b75e-5ccc1865e1bf" />
 
 ### Common commands
 
