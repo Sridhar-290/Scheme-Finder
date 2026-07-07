@@ -64,6 +64,7 @@ Open two terminals:
 - `DATABASE_URL` — Postgres connection string
 - `SESSION_SECRET` — JWT signing secret
 <img width="1774" height="887" alt="ChatGPT Image Jul 6, 2026, 10_25_50 PM" src="https://github.com/user-attachments/assets/9464781f-2515-40d3-b75e-5ccc1865e1bf" />
+<img width="1842" height="995" alt="Screenshot 2026-07-06 234602" src="https://github.com/user-attachments/assets/45efc330-92cb-4129-a859-508ebe94f6be" />
 
 ### Common commands
 
