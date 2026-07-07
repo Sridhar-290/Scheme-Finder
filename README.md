@@ -65,21 +65,6 @@ Open two terminals:
 - `SESSION_SECRET` — JWT signing secret
 <img width="1774" height="887" alt="ChatGPT Image Jul 6, 2026, 10_25_50 PM" src="https://github.com/user-attachments/assets/9464781f-2515-40d3-b75e-5ccc1865e1bf" />
 
-
-
-<img width="1711" height="910" alt="Screenshot 2026-07-06 234705" src="https://github.com/user-attachments/assets/6755c2a2-391d-449c-adc9-e24169fbe6a7" />
-
-
-
-
-<img width="1842" height="995" alt="Screenshot 2026-07-06 234602" src="https://github.com/user-attachments/assets/45efc330-92cb-4129-a859-508ebe94f6be" />
-
-
-
-
-<img width="1515" height="927" alt="Screenshot 2026-07-06 234638" src="https://github.com/user-attachments/assets/bee786f8-3384-43d3-a420-33577e1a7105" />
-
-
 ### Common commands
 
 - Typecheck (all packages):
@@ -102,6 +87,8 @@ Open two terminals:
 Optional but important:
 
 - `OPENAI_API_KEY` — if set, AI uses OpenAI; otherwise AI falls back to mock responses
+
+- <img width="1711" height="910" alt="Screenshot 2026-07-06 234705" src="https://github.com/user-attachments/assets/6755c2a2-391d-449c-adc9-e24169fbe6a7" />
 
 ## Stack
 
@@ -151,6 +138,9 @@ Optional but important:
 
 ## Architecture decisions / conventions
 
+<img width="1842" height="995" alt="Screenshot 2026-07-06 234602" src="https://github.com/user-attachments/assets/45efc330-92cb-4129-a859-508ebe94f6be" />
+
+
 - Schemes are **static in-memory data** (no DB table for schemes)
 - JWT auth uses `SESSION_SECRET` for signing
 - API route groupings include:
@@ -178,6 +168,7 @@ Optional but important:
 - **Profile** (`/profile`) — user details form (age, state, income, occupation, gender, caste category)
 - **Auth** — register/login with JWT, session restored on page load
 
+<img width="1515" height="927" alt="Screenshot 2026-07-06 234638" src="https://github.com/user-attachments/assets/bee786f8-3384-43d3-a420-33577e1a7105" />
 ## Gotchas
 
 - After editing `lib/api-spec/openapi.yaml`, run:
